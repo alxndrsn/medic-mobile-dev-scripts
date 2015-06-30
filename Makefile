@@ -17,7 +17,7 @@ lucene:
 sentinel:
 	cd sentinel && (git pull||true) && COUCH_URL=${COUCH_URL} node server.js
 webapp: node_012
-	cd webapp && (git pull||true) && COUCH_URL=${COUCH_URL} grunt dev
+	cd webapp && rm -rf static/dist && (git pull||true) && COUCH_URL=${COUCH_URL} grunt dev --force
 precommit:
 	cd webapp && grunt precommit
 reset-demo-data:
