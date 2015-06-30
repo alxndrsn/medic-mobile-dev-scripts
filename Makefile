@@ -5,7 +5,7 @@ node_010:
 node_012:
 	brew unlink node010 && brew link node
 api:
-	cd api && (git pull||true) && COUCH_URL=${COUCH_URL} node server.js
+	cd api && (git pull||true) && npm install && COUCH_URL=${COUCH_URL} node server.js
 couch:
 	couchdb
 couch-logs:
