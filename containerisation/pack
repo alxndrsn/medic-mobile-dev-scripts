@@ -1,0 +1,18 @@
+#!/usr/bin/env bash -eu +B
+
+base_url=http://dev.medicmobile.org/downloads/medic-os/latest/
+iso_file=$(curl ${base_url} | grep -o '".*-x64-.*\.iso"' | tr -d '"')
+iso_url="http://dev.medicmobile.org/downloads/medic-os/latest/${iso_file}"
+
+packer build <(cat <<EOF
+{
+	"post-processors":["vagrant"],
+	"builders":[{
+		"type":"vmware-iso",
+		"iso_url":"${iso_url}",
+		"iso_checksum_type":"none",
+		"ssh_username":"bertie"
+	}]
+}
+EOF
+)
