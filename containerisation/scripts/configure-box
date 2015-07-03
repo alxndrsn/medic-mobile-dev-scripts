@@ -1,2 +1,2 @@
-#!/usr/sh
+#!/bin/sh
 echo "I am in the box"
