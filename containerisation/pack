@@ -19,6 +19,15 @@ packer build <(cat <<EOF
 		"ssh_username":"vm",
 		"ssh_password":"password",
 		"ssh_port":33696
+	}],
+	"provisioners":[{
+		"type":"shell",
+		"script":"scripts/configure-box",
+		"remote_path":"/srv/configure-box"
+	},
+	{
+		"type":"shell",
+		"script":"scripts/sleep-forever"
 	}]
 }
 EOF
