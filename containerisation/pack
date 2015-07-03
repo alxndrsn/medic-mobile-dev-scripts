@@ -4,8 +4,8 @@ log() {
 	echo "[$0] $@"
 }
 
-base_url=http://dev.medicmobile.org/downloads/medic-os/latest/
-iso_file=$(curl ${base_url} | grep -o '".*-x64-.*\.iso"' | tr -d '"')
+base_url="http://dev.medicmobile.org/downloads/medic-os/latest/"
+iso_file="$(curl ${base_url} | grep -o '".*-x64-.*\.iso"' | tr -d '"')"
 iso_url="http://dev.medicmobile.org/downloads/medic-os/latest/${iso_file}"
 
 log "Starting VM with ISO ${iso_file}..."
@@ -40,26 +40,26 @@ setup_url="http://${vm_ip}/setup"
 poll_url="${setup_url}/poll"
 
 log "Waiting for vm to respond on ${poll_url}..."
-while [[ "$(curl -s -w '%{http_code}' ${poll_url} -o /dev/null)" != "200" ]]; do
+while [[ "$(curl -s -w '%{http_code}' "${poll_url}" -o /dev/null)" != "200" ]]; do
 	log "Waiting for vm to respond on ${poll_url}..."
 	sleep 5
 done
 log "Server appears to be up."
 
 log "Setting up user..."
-curl -X POST ${setup_url}/password --data \
+curl -X POST "${setup_url}/password" --data \
 		'fullname=test&name=test&password=password&confirmation=password'
 log "User set up."
 
 log "Waiting for setup to complete..."
-while [[ "$(curl ${poll_url} | jq '.ready')" != "true" ]]; do
+while [[ "$(curl "${poll_url}" | jq '.ready')" != "true" ]]; do
 	log "Waiting for setup to complete..."
 	sleep 5
 done
 log "Set up complete."
 
 log "Shutting down concierge..."
-curl ${setup_url}/finish
+curl "${setup_url}/finish"
 
 log "Please test SSH onto the machine..."
 read
