@@ -1,5 +1,8 @@
 .PHONY: api dashboard sentinel webapp
 
+default:
+	foreman start
+
 node_010:
 	brew unlink node && brew link node010
 node_012:
