@@ -25,8 +25,10 @@ sentinel:
 
 kansorc:
 	cd webapp && echo "exports.env = { default: { db: '${COUCH_URL}' } }" > .kansorc
+webapp-clean-bower:
+	cd webapp && rm -rf bower_components
 webapp: node_012 kansorc
-	cd webapp && rm -rf static/dist && rm -rf bower_components && (git pull||true) && npm install && COUCH_URL=${COUCH_URL} grunt dev --force
+	cd webapp && (git pull||true) && rm -rf static/dist && npm install && COUCH_URL=${COUCH_URL} grunt dev --force
 precommit:
 	cd webapp && grunt precommit
 
