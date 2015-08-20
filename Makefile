@@ -36,6 +36,11 @@ launch-latest-iso:
 	cd containerisation && ./pack
 
 reset-demo-data: reset-demo-data-alpha
+reset-demo-data-mini:
+	-mkdir demo-data
+	cd demo-data && wget -c 'https://staging.dev.medicmobile.org/_couch/downloads/medic-demos-diy-release.tar.xz/medic-demos-diy-release.tar.xz'
+	cd demo-data && tar -xvf medic-demos-diy-release.tar.xz
+	cp demo-data/demos/*.couch /usr/local/var/lib/couchdb/ && rm -rf /usr/local/var/lib/couchdb/.medic_design/
 reset-demo-data-alpha:
 	-mkdir demo-data
 	cd demo-data && wget -c 'https://staging.dev.medicmobile.org/_couch/downloads/medic-demos-demos-alpha.tar.xz/medic-demos-demos-alpha.tar.xz'
