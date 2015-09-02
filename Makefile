@@ -1,3 +1,5 @@
+OFFLINE = false
+
 .PHONY: api dashboard sentinel webapp
 
 default:
@@ -9,7 +11,10 @@ node_012:
 	brew unlink node010 && brew link node
 
 api:
-	cd api && (git pull||true) && npm install && COUCH_URL=${COUCH_URL} node server.js
+	cd api && \
+		(${OFFLINE}||git pull||true) && \
+		(${OFFLINE}||npm install) && \
+		COUCH_URL=${COUCH_URL} node server.js
 couch:
 	couchdb
 couch-logs:
@@ -28,7 +33,10 @@ kansorc:
 webapp-clean-bower:
 	cd webapp && rm -rf bower_components
 webapp: node_012 kansorc
-	cd webapp && (git pull||true) && rm -rf static/dist && npm install && COUCH_URL=${COUCH_URL} grunt dev
+	cd webapp && (${OFFLINE}||git pull||true) && \
+		rm -rf static/dist && \
+		(${OFFLINE}||npm install) && \
+		COUCH_URL=${COUCH_URL} grunt dev
 precommit:
 	cd webapp && grunt precommit
 
@@ -38,16 +46,22 @@ launch-latest-iso:
 reset-demo-data: reset-demo-data-alpha
 reset-demo-data-mini:
 	-mkdir demo-data
-	cd demo-data && wget -c 'https://staging.dev.medicmobile.org/_couch/downloads/medic-demos-diy-release.tar.xz/medic-demos-diy-release.tar.xz'
+	${OFFLINE} || (cd demo-data && \
+		wget -c 'https://staging.dev.medicmobile.org/_couch/downloads/medic-demos-diy-release.tar.xz/medic-demos-diy-release.tar.xz')
 	cd demo-data && tar -xvf medic-demos-diy-release.tar.xz
 	cp demo-data/demos/*.couch /usr/local/var/lib/couchdb/ && rm -rf /usr/local/var/lib/couchdb/.medic_design/
 reset-demo-data-alpha:
 	-mkdir demo-data
-	cd demo-data && wget -c 'https://staging.dev.medicmobile.org/_couch/downloads/medic-demos-demos-alpha.tar.xz/medic-demos-demos-alpha.tar.xz'
+	${OFFLINE} || (cd demo-data && \
+		wget -c 'https://staging.dev.medicmobile.org/_couch/downloads/medic-demos-demos-alpha.tar.xz/medic-demos-demos-alpha.tar.xz')
 	cd demo-data && tar -xvf medic-demos-demos-alpha.tar.xz
 	cp demo-data/demos/*.couch /usr/local/var/lib/couchdb/ && rm -rf /usr/local/var/lib/couchdb/.medic_design/
 reset-demo-data-beta:
 	-mkdir demo-data
-	cd demo-data && wget -c 'https://staging.dev.medicmobile.org/_couch/downloads/medic-demos-demos-beta.tar.xz/medic-demos-demos-beta.tar.xz'
+	${OFFLINE} || (cd demo-data && \
+		wget -c 'https://staging.dev.medicmobile.org/_couch/downloads/medic-demos-demos-beta.tar.xz/medic-demos-demos-beta.tar.xz')
 	cd demo-data && tar -xvf medic-demos-demos-beta.tar.xz
 	cp demo-data/demos/*.couch /usr/local/var/lib/couchdb/ && rm -rf /usr/local/var/lib/couchdb/.medic_design/
+
+kill-services:
+	ps -ef | egrep 'node|npm' | grep -v grep | awk '{print $$2}' | xargs -n1 kill -9
