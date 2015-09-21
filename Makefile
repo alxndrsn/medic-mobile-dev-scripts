@@ -65,3 +65,6 @@ reset-demo-data-beta:
 
 kill-services:
 	ps -ef | egrep 'node|npm' | grep -v grep | awk '{print $$2}' | xargs -n1 kill -9
+
+webapp-unit:
+	cd webapp && grunt jshint mmbower mmjs karma:unit karma:unit_ci
