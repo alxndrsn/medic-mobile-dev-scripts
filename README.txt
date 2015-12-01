@@ -8,4 +8,4 @@ Check out individual projects as subdirectories, and omit the `medic-` prefix fo
 
 To start webapp in development mode and its dependent services, run:
 
-	foreman start
+	make
