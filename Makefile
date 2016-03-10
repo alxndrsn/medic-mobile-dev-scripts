@@ -31,7 +31,7 @@ sentinel:
 kansorc:
 	cd webapp && echo "exports.env = { default: { db: '${COUCH_URL}' } }" > .kansorc
 webapp-clean-bower:
-	cd webapp && rm -rf bower_components
+	${OFFLINE} || (cd webapp && rm -rf bower_components)
 webapp: node_012 kansorc
 	cd webapp && (${OFFLINE}||git pull||true) && \
 		rm -rf static/dist && \
