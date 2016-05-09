@@ -14,4 +14,4 @@ api: sleep ${WEBAPP_START_DELAY} && make api
 couch: make couch
 #lucene: make lucene
 #sentinel: sleep ${WEBAPP_START_DELAY} && make sentinel
-webapp: make webapp
+webapp: make webapp-${WEBAPP_FLAVOR}

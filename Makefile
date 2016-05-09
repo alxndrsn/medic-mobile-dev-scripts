@@ -1,14 +1,17 @@
 OFFLINE = false
+WEBAPP_FLAVOR = develop
 
 .PHONY: api dashboard sentinel webapp
 
 default:
-	foreman start
+	WEBAPP_FLAVOR=${WEBAPP_FLAVOR} foreman start
 
 node_010:
-	brew unlink node && brew link node010
+	brew unlink node && brew unlink node012 && brew link node010
 node_012:
-	brew unlink node010 && brew link node
+	brew unlink node && brew unlink node010 && brew link node012
+node_5:
+	brew unlink node010 && brew unlink node012 && brew link node
 
 api:
 	cd api && \
@@ -32,11 +35,14 @@ kansorc:
 	cd webapp && echo "exports.env = { default: { db: '${COUCH_URL}' } }" > .kansorc
 webapp-clean-bower:
 	${OFFLINE} || (cd webapp && rm -rf bower_components)
-webapp: node_012 kansorc
+webapp:
 	cd webapp && (${OFFLINE}||git pull||true) && \
 		rm -rf static/dist && \
 		(${OFFLINE}||npm install) && \
 		COUCH_URL=${COUCH_URL} grunt dev
+webapp-develop: node_5 kansorc webapp
+webapp-010: node_010 kansorc webapp
+webapp-012: node_012 kansorc webapp
 precommit:
 	cd webapp && grunt precommit
 
